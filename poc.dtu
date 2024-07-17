@@ -1,123 +1,211 @@
-function 	
-	local taskname="userTask"
-	log.info(taskname,"start")
-	sys.wait(30000)
-	local netid =1
-	local netmsg ="UART_DATA_TO_NET"..netid
-	local uid=2
-	local uartmsg ="UART"..uid.."_NEED_SEND"
-	local rd=nil
-	local cmd={
-		{0x01,0x03,0x00,0x00,0x00,0x05,0x85,0xC9},
-                {0x68,0x61,0x57,0x85,0x09,0x03,0x24,0x68,0x11,0x04,0x33,0x34,0x35,0x35,0x23,0x16},
-                {0x68,0x61,0x57,0x85,0x09,0x03,0x24,0x68,0x11,0x04,0x33,0x34,0x34,0x35,0x22,0x16},
-                {0x68,0x61,0x57,0x85,0x09,0x03,0x24,0x68,0x11,0x04,0x33,0x34,0x36,0x35,0x24,0x16}
-	}
-	local ncmd=nil
-	local crcr=nil
-	prouart.ProuartStopProReciveCache(1)
-	pronet.PronetStopProNetRecive(1)
+function 
+    local taskname = "userTask"
+    log.info(taskname, "start")
 
-        local iccid = sim.getIccid()
-	local imei=misc.getImei()
+    sys.wait(30000)
+    local netid = 1
+    local netmsg = "UART_DATA_TO_NET" .. netid
+    local uid = 2
+    local uartmsg = "UART" .. uid .. "_NEED_SEND"
+    local rd = nil
+    local cmd = {
+        {0x01, 0x03, 0x00, 0x00, 0x00, 0x05, 0x85, 0xC9},
+        {0x68, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0x68, 0x11, 0x04, 0x34, 0x37, 0x33, 0x37, 0xB6, 0x16},
+        {0x68, 0x61, 0x57, 0x85, 0x09, 0x03, 0x24, 0x68, 0x11, 0x04, 0x33, 0x33, 0x36, 0x35, 0x24, 0x16},
+        {0x68, 0x61, 0x57, 0x85, 0x09, 0x03, 0x24, 0x68, 0x11, 0x04, 0x33, 0x34, 0x35, 0x35, 0x23, 0x16},
+        {0x68, 0x61, 0x57, 0x85, 0x09, 0x03, 0x24, 0x68, 0x11, 0x04, 0x33, 0x34, 0x34, 0x35, 0x22, 0x16},
+        {0x68, 0x61, 0x57, 0x85, 0x09, 0x03, 0x24, 0x68, 0x11, 0x04, 0x33, 0x33, 0x33, 0x33, 0x22, 0x16}
+    }
+    local ncmd = nil
+    local crcr = nil
+    prouart.ProuartStopProReciveCache(1)
+    pronet.PronetStopProNetRecive(1)
 
-	while true do
-		local temp1=0
-		local hum1=0
-                local curr = 0
-                local volt = 0
-                local pow = 0
-		local temp2=0
-		local hum2=0 
-		
-		while true do 
-			rd = prouart.ProuartGetReciveChaceAndDel(uid)
-			if rd ==nil then 
-				break
-			end 
-		end
-		
-		for i=1,#cmd,1 do 
+    local iccid = sim.getIccid()
+    local imei = misc.getImei()
 
-                        local retry_count = 0
-                        local max_retries = 10
-                        rd = nil
+    local meterAddress = nil
 
-			while retry_count < max_retries and rd == nil do
-                            ncmd=usertool.ToolTableToHexStr(cmd[i])
-			    prouart.ProuartSetSendChace(uid,ncmd)
-			    sys.publish(uartmsg)
-			    sys.wait(1000)
-			    rd = prouart.ProuartGetReciveChaceAndDel(uid)
-                            if rd == nil then
-                                   retry_count = retry_count + 1
-                                   sys.wait(1000)
+    while true do
+        local temp1 = 0
+        local hum1 = 0
+        local curr = 0
+        local volt = 0
+        local pow = 0
+        local tpow = 0
+
+        while true do 
+            rd = prouart.ProuartGetReciveChaceAndDel(uid)
+            if rd == nil then 
+                break
+            end 
+        end
+
+        for i = 1, #cmd, 1 do 
+            local retry_count = 0
+            local max_retries = 10
+            rd = nil
+
+            while retry_count < max_retries and rd == nil do
+                ncmd = usertool.ToolTableToHexStr(cmd[i])
+                prouart.ProuartSetSendChace(uid, ncmd)
+                sys.publish(uartmsg)
+                sys.wait(1000)
+                rd = prouart.ProuartGetReciveChaceAndDel(uid)
+                if rd == nil then
+                    retry_count = retry_count + 1
+                    sys.wait(1000)
+                end
+            end 
+            if rd == nil then 
+                log.info(taskname, "Failed to receive data after", max_retries, "retries")
+            end 
+            if rd then 
+                log.info(taskname, "cmd num=", i, "rd data=", string.toHex(rd))
+                rd = usertool.ToolHexStrToTable(rd)
+                local fecount = 0
+                if rd then 
+                    crcr = usertool.ToolCheckModbusCRC16(rd, #rd, 0)
+                    if rd[1] == 254 then fecount = fecount + 1 end
+                    if rd[2] == 254 then fecount = fecount + 1 end
+                    if rd[3] == 254 then fecount = fecount + 1 end
+                    if rd[4] == 254 then fecount = fecount + 1 end
+                    log.info(taskname, "FE count=", fecount)
+                    if crcr == 1 then 
+                        if i == 1 then
+                            temp1 = (rd[4] * 256 + rd[5]) * 0.1
+                            hum1 = (rd[6] * 256 + rd[7]) * 0.1
+                        end     
+                    end             
+                    if i == 2 then 
+                        local hex_str_1 = string.format("%02X", rd[fecount + 1 + 6 + 1 + 1 + 1 + 4 + 1 ] - 0x33)  
+                        local hex_str_2 = string.format("%02X", rd[fecount + 1 + 6 + 1 + 1 + 1 + 4 + 2 ] - 0x33)  
+                        local hex_str_3 = string.format("%02X", rd[fecount + 1 + 6 + 1 + 1 + 1 + 4 + 3 ] - 0x33)
+                        local hex_str_4 = string.format("%02X", rd[fecount + 1 + 6 + 1 + 1 + 1 + 4 + 4 ] - 0x33)
+                        local hex_str_5 = string.format("%02X", rd[fecount + 1 + 6 + 1 + 1 + 1 + 4 + 5 ] - 0x33)
+                        local hex_str_6 = string.format("%02X", rd[fecount + 1 + 6 + 1 + 1 + 1 + 4 + 6 ] - 0x33)
+                        local concatenated_str = hex_str_6 .. hex_str_5 .. hex_str_4 .. hex_str_3 .. hex_str_2 .. hex_str_1 
+                        log.info(taskname, "concate str:", concatenated_str )
+                        meterAddress  = concatenated_str
+                        local address_bytes = {
+                            tonumber(hex_str_1, 16),
+                            tonumber(hex_str_2, 16),
+                            tonumber(hex_str_3, 16),
+                            tonumber(hex_str_4, 16),
+                            tonumber(hex_str_5, 16),
+                            tonumber(hex_str_6, 16)
+                        }
+
+                        for j = 1, 6 do
+                            cmd[3][j+1] = address_bytes[j]
+                            cmd[4][j+1] = address_bytes[j]
+                            cmd[5][j+1] = address_bytes[j]
+                        end
+
+                        local checksum1 = 0
+                        local checksum2 = 0
+                        local checksum3 = 0
+
+                        for j = 1, 14 do
+                            checksum1 = checksum1 + cmd[3][j]
+                            checksum2 = checksum2 + cmd[4][j]
+                            checksum3 = checksum3 + cmd[5][j]
+                        end
+                        cmd[3][15] = bit.band(checksum1, 0xFF)
+                        cmd[4][15] = bit.band(checksum2, 0xFF)
+                        cmd[5][15] = bit.band(checksum3, 0xFF)
+
+                         local function printHexArray(array)
+                            local hexArray = {}
+                            for k, v in ipairs(array) do
+                                table.insert(hexArray, string.format("%02X", v))
                             end
-                        end 
-                        if rd == nil then 
-                            log.info(taskname, "Failed to receive data after", max_retries, "retries")
-                        end 
-			if rd then 
-				log.info(taskname,"cmd num=",i,"rd data=",string.toHex(rd))
-				rd = usertool.ToolHexStrToTable(rd)
-				if rd then 
-					crcr = usertool.ToolCheckModbusCRC16(rd, #rd,0)
-					if crcr == 1 then 
-						if i ==1 then
-							temp1 = (rd[4]*256+rd[5])*0.1
-							hum1 = (rd[6]*256+rd[7])*0.1
-						end 	
-					end 			
-					if i ==2 then 
-                                                local hex_str_19 = string.format("%X", rd[19]-0x33)  
-                                                local hex_str_20 = string.format("%X", rd[20]-0x33) 
-                                                local hex_str_21 = string.format("%X", rd[21]-0x33)  
-                                                local concatenated_str = hex_str_21 .. hex_str_20 .. hex_str_19
-                                                log.info(taskname, "concate str:", concatenated_str )
-                                                local decimal_value = tonumber(concatenated_str, 10)
-                                                log.info(taskname, "current decimal_value :", decimal_value )
-						curr= ( decimal_value )*0.001 
-					end		
-                                        if i ==3 then
-                                                local hex_str_19 = string.format("%X", rd[19]-0x33) 
-                                                local hex_str_20 = string.format("%X", rd[20]-0x33)  
-                                                local concatenated_str = hex_str_20 .. hex_str_19
-                                                log.info(taskname, "concate str:", concatenated_str )
-                                                local decimal_value = tonumber(concatenated_str, 10)
-                                                log.info(taskname, "volt decimal_value :", decimal_value )
-						volt= ( decimal_value )*0.1 
-                                        end
-                                        if i ==4 then
-                                                local hex_str_19 = string.format("%X", rd[19]-0x33)  
-                                                local hex_str_20 = string.format("%X", rd[20]-0x33) 
-                                                local hex_str_21 = string.format("%X", rd[21]-0x33)  
-                                                local concatenated_str = hex_str_21 .. hex_str_20 .. hex_str_19
-                                                log.info(taskname, "concate str:", concatenated_str )
-                                                local decimal_value = tonumber(concatenated_str, 10)
-                                                log.info(taskname, "pow decimal_value :", decimal_value )
-						pow= ( decimal_value )*0.0001
-                                        end
-				end					 
-			end 
-		 end 
-	 
-		local d={}
-		d.imei=imei
-		d.iccid=iccid
-		d.datas={}
-		d.datas.temp1=temp1
-		d.datas.hum1=hum1
-		d.datas.curr=curr
-		d.datas.volt=volt 
-                d.datas.pow=pow
-		local restr=json.encode(d)							
-		log.info("taskname.json",restr)
-		if restr then 
-			if 1==pronet.PronetGetNetState(netid) then 
-				pronet.PronetInsertSendChache(netid,restr)
-				sys.publish(netmsg)
-			end 
-		end 						
-		sys.wait(60000*15)
-	end
+                            return table.concat(hexArray, " ")
+                        end
+
+                        log.info(taskname, "Updated cmd[3]: ", printHexArray(cmd[3]))
+                        log.info(taskname, "Updated cmd[4]: ", printHexArray(cmd[4]))
+                        log.info(taskname, "Updated cmd[5]: ", printHexArray(cmd[5]))
+
+                    end
+                    if i == 3 then
+                        log.info(taskname, "pow: ", string.format("%02X", rd[fecount + 10 + 5] - 0x33))
+                        log.info(taskname, "pow: ", string.format("%02X", rd[fecount + 10 + 6] - 0x33))
+                        log.info(taskname, "pow: ", string.format("%02X", rd[fecount + 10 + 7] - 0x33))
+                       
+                        local hex_str_19 = string.format("%02X", rd[fecount + 10 + 5] - 0x33)  
+                        local hex_str_20 = string.format("%02X", rd[fecount + 10 + 6] - 0x33) 
+                        local hex_str_21 = string.format("%02X", rd[fecount + 10 + 7] - 0x33)  
+                        local concatenated_str =  hex_str_21 .. hex_str_20 .. hex_str_19
+                        log.info(taskname, "concate str:", concatenated_str )
+                        local decimal_value = tonumber(concatenated_str, 10)
+                        log.info(taskname, "pow decimal_value :", decimal_value )
+                        pow = (decimal_value) * 0.0001
+                    end
+                    if i == 4 then
+                        log.info(taskname, "current: ", string.format("%02X", rd[fecount + 15] - 0x33))
+                        log.info(taskname, "current: ", string.format("%02X", rd[fecount + 16] - 0x33))
+                        log.info(taskname, "current: ", string.format("%02X", rd[fecount + 17] - 0x33))
+                        local hex_str_19 = string.format("%X", rd[fecount + 15] - 0x33) 
+                        local hex_str_20 = string.format("%X", rd[fecount + 16] - 0x33)  
+                        local hex_str_21 = string.format("%X", rd[fecount + 17] - 0x33)  
+                        local concatenated_str = hex_str_21 .. hex_str_20 .. hex_str_19
+                        log.info(taskname, "concate str:", concatenated_str )
+                        local decimal_value = tonumber(concatenated_str, 10)
+                        log.info(taskname, "current decimal_value :", decimal_value )
+                        curr = (decimal_value) * 0.001 
+                    end
+                    if i == 5 then
+                        log.info(taskname, "volt: ", string.format("%02X", rd[fecount + 15] - 0x33))
+                        log.info(taskname, "volt: ", string.format("%02X", rd[fecount + 16] - 0x33))
+                        local hex_str_19 = string.format("%02X", rd[fecount + 15] - 0x33) 
+                        local hex_str_20 = string.format("%02X", rd[fecount + 16] - 0x33)  
+                        local concatenated_str = hex_str_20 .. hex_str_19
+                        log.info(taskname, "concate str:", concatenated_str )
+                        local decimal_value = tonumber(concatenated_str, 10)
+                        log.info(taskname, "volt decimal_value :", decimal_value )
+                        volt = (decimal_value) * 0.1 
+                    end
+                    if i == 6 then
+                        log.info(taskname, "tpow: ", string.format("%02X", rd[fecount + 10 + 5] - 0x33))
+                        log.info(taskname, "tpow: ", string.format("%02X", rd[fecount + 10 + 6] - 0x33))
+                        log.info(taskname, "tpow: ", string.format("%02X", rd[fecount + 10 + 7] - 0x33))
+                        log.info(taskname, "tpow: ", string.format("%02X", rd[fecount + 10 + 8] - 0x33))
+                       
+                        local hex_str_19 = string.format("%02X", rd[fecount + 10 + 5] - 0x33)  
+                        local hex_str_20 = string.format("%02X", rd[fecount + 10 + 6] - 0x33) 
+                        local hex_str_21 = string.format("%02X", rd[fecount + 10 + 7] - 0x33)  
+                        local hex_str_22 = string.format("%02X", rd[fecount + 10 + 8] - 0x33)  
+                        local concatenated_str =  hex_str_22 .. hex_str_21 .. hex_str_20 .. hex_str_19
+                        log.info(taskname, "concate str:", concatenated_str )
+                        local decimal_value = tonumber(concatenated_str, 10)
+                        log.info(taskname, "tpow decimal_value :", decimal_value )
+                        tpow = (decimal_value) * 0.0001
+                        
+                    end
+                end                     
+            end 
+        end 
+
+        local d = {}
+        d.imei = imei
+        d.iccid = iccid
+        d.sn = meterAddress
+        d.datas = {}
+        d.datas.temp1 = temp1
+        d.datas.hum1 = hum1
+        d.datas.curr = curr
+        d.datas.volt = volt 
+        d.datas.pow = pow
+        d.datas.tpow = tpow
+        local restr = json.encode(d)                            
+        log.info(taskname, restr)
+        if restr then 
+            if 1 == pronet.PronetGetNetState(netid) then 
+                pronet.PronetInsertSendChache(netid, restr)
+                sys.publish(netmsg)
+            end 
+        end                         
+        sys.wait(60000 * 15)
+    end
 end
