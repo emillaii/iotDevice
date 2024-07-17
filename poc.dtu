@@ -100,20 +100,24 @@ function
                             cmd[3][j+1] = address_bytes[j]
                             cmd[4][j+1] = address_bytes[j]
                             cmd[5][j+1] = address_bytes[j]
+                            cmd[6][j+1] = address_bytes[j]
                         end
 
                         local checksum1 = 0
                         local checksum2 = 0
                         local checksum3 = 0
+                        local checksum4 = 0
 
                         for j = 1, 14 do
                             checksum1 = checksum1 + cmd[3][j]
                             checksum2 = checksum2 + cmd[4][j]
                             checksum3 = checksum3 + cmd[5][j]
+                            checksum4 = checksum4 + cmd[6][j]
                         end
                         cmd[3][15] = bit.band(checksum1, 0xFF)
                         cmd[4][15] = bit.band(checksum2, 0xFF)
                         cmd[5][15] = bit.band(checksum3, 0xFF)
+                        cmd[6][15] = bit.band(checksum4, 0xFF)
 
                          local function printHexArray(array)
                             local hexArray = {}
@@ -126,7 +130,7 @@ function
                         log.info(taskname, "Updated cmd[3]: ", printHexArray(cmd[3]))
                         log.info(taskname, "Updated cmd[4]: ", printHexArray(cmd[4]))
                         log.info(taskname, "Updated cmd[5]: ", printHexArray(cmd[5]))
-
+                        log.info(taskname, "Updated cmd[6]: ", printHexArray(cmd[6]))
                     end
                     if i == 3 then
                         log.info(taskname, "pow: ", string.format("%02X", rd[fecount + 10 + 5] - 0x33))
@@ -180,7 +184,7 @@ function
                         log.info(taskname, "concate str:", concatenated_str )
                         local decimal_value = tonumber(concatenated_str, 10)
                         log.info(taskname, "tpow decimal_value :", decimal_value )
-                        tpow = (decimal_value) * 0.0001
+                        tpow = (decimal_value) * 0.01
                         
                     end
                 end                     
