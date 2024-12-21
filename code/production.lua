@@ -59,7 +59,13 @@ function
         local curr = 0
         local volt = 0
         local pow = 0
+
         local tpow = 0
+        local tppow = 0 
+        local tnpow = 0
+
+        local date = ""
+        local time = ""
 
         while true do 
             rd = prouart.ProuartGetReciveChaceAndDel(uid)
@@ -287,17 +293,23 @@ function
                         tpow = (decimal_value) * 0.01
                     end
                     if i == 7 then 
-                        log.info(taskname, "WW: ", string.format("%02X", rd[fecount + 10 + 5] - 0x33))
-                        log.info(taskname, "DD: ", string.format("%02X", rd[fecount + 10 + 6] - 0x33))
-                        log.info(taskname, "MM: ", string.format("%02X", rd[fecount + 10 + 7] - 0x33))
-                        log.info(taskname, "YY: ", string.format("%02X", rd[fecount + 10 + 8] - 0x33))
+                        local WW = string.format("%02X", rd[fecount + 10 + 5] - 0x33)  
+                        local DD = string.format("%02X", rd[fecount + 10 + 6] - 0x33) 
+                        local MM = string.format("%02X", rd[fecount + 10 + 7] - 0x33)  
+                        local YY = string.format("%02X", rd[fecount + 10 + 8] - 0x33)  
+                        local concatenated_str =  YY .. MM .. DD 
+                        log.info(taskname, "concate str:", concatenated_str )
+                        date = concatenated_str
                     end 
                     if i == 8 then 
-                        log.info(taskname, "ss: ", string.format("%02X", rd[fecount + 10 + 5] - 0x33))
-                        log.info(taskname, "mm: ", string.format("%02X", rd[fecount + 10 + 6] - 0x33))
-                        log.info(taskname, "HH: ", string.format("%02X", rd[fecount + 10 + 7] - 0x33))
+                        local ss = string.format("%02X", rd[fecount + 10 + 5] - 0x33)  
+                        local mm = string.format("%02X", rd[fecount + 10 + 6] - 0x33) 
+                        local hh = string.format("%02X", rd[fecount + 10 + 7] - 0x33)  
+                        local concatenated_str = hh .. mm .. ss
+                        log.info(taskname, "concate str:", concatenated_str )
+                        time = concatenated_str
                     end 
-                    if i == 9 then 
+                    if i == 9 or i == 10 then 
                         local hex_str_19 = string.format("%02X", rd[fecount + 10 + 5] - 0x33)  
                         local hex_str_20 = string.format("%02X", rd[fecount + 10 + 6] - 0x33) 
                         local hex_str_21 = string.format("%02X", rd[fecount + 10 + 7] - 0x33)  
@@ -305,20 +317,15 @@ function
                         local concatenated_str =  hex_str_22 .. hex_str_21 .. hex_str_20 .. hex_str_19
                         log.info(taskname, "concate str:", concatenated_str )
                         local decimal_value = tonumber(concatenated_str, 10)
-                        log.info(taskname, "t+pow decimal_value :", decimal_value )
-                        --tpow = (decimal_value) * 0.01
-                    end 
-                    if i == 10 then 
-                        local hex_str_19 = string.format("%02X", rd[fecount + 10 + 5] - 0x33)  
-                        local hex_str_20 = string.format("%02X", rd[fecount + 10 + 6] - 0x33) 
-                        local hex_str_21 = string.format("%02X", rd[fecount + 10 + 7] - 0x33)  
-                        local hex_str_22 = string.format("%02X", rd[fecount + 10 + 8] - 0x33)  
-                        local concatenated_str =  hex_str_22 .. hex_str_21 .. hex_str_20 .. hex_str_19
-                        log.info(taskname, "concate str:", concatenated_str )
-                        local decimal_value = tonumber(concatenated_str, 10)
-                        log.info(taskname, "t-pow decimal_value :", decimal_value )
-                        --tpow = (decimal_value) * 0.01
-                    end 
+                        if i == 9 
+                            log.info(taskname, "t+pow decimal_value :", decimal_value )
+                            tppow = (decimal_value) * 0.01
+                        end 
+                        if i == 10
+                            log.info(taskname, "t-pow decimal_value :", decimal_value )
+                            tnpow = (decimal_value) * 0.01
+                        end 
+                    end
                     if i == 11 or i == 12 then
                         local data_len = string.format("%02X", rd[fecount + 10])
                         log.info(taskname, "data_len:", data_len)
@@ -470,12 +477,17 @@ function
         d.iccid = iccid
         d.serialNo = meterAddress
         d.datas = {}
+        d.datas.date = date 
+        d.datas.time = time
         d.datas.temp1 = temp1
         d.datas.hum1 = hum1
         d.datas.curr = curr
         d.datas.volt = volt 
         d.datas.pow = pow
         d.datas.tpow = tpow
+        d.datas.tppow = tppow
+        d.data.tnpow = tnpow
+        
         local restr = json.encode(d)                            
         log.info(taskname, restr)
         if restr then 
