@@ -309,7 +309,7 @@ function
                         log.info(taskname, "concate str:", concatenated_str )
                         time = concatenated_str
                     end 
-                    if i == 9 or i == 10 then 
+                    if i == 9 then 
                         local hex_str_19 = string.format("%02X", rd[fecount + 10 + 5] - 0x33)  
                         local hex_str_20 = string.format("%02X", rd[fecount + 10 + 6] - 0x33) 
                         local hex_str_21 = string.format("%02X", rd[fecount + 10 + 7] - 0x33)  
@@ -317,15 +317,20 @@ function
                         local concatenated_str =  hex_str_22 .. hex_str_21 .. hex_str_20 .. hex_str_19
                         log.info(taskname, "concate str:", concatenated_str )
                         local decimal_value = tonumber(concatenated_str, 10)
-                        if i == 9 
-                            log.info(taskname, "t+pow decimal_value :", decimal_value )
-                            tppow = (decimal_value) * 0.01
-                        end 
-                        if i == 10
-                            log.info(taskname, "t-pow decimal_value :", decimal_value )
-                            tnpow = (decimal_value) * 0.01
-                        end 
-                    end
+                        log.info(taskname, "t+pow decimal_value :", decimal_value )
+                        tppow = (decimal_value) * 0.01
+                    end 
+                    if i == 10 then 
+                        local hex_str_19 = string.format("%02X", rd[fecount + 10 + 5] - 0x33)  
+                        local hex_str_20 = string.format("%02X", rd[fecount + 10 + 6] - 0x33) 
+                        local hex_str_21 = string.format("%02X", rd[fecount + 10 + 7] - 0x33)  
+                        local hex_str_22 = string.format("%02X", rd[fecount + 10 + 8] - 0x33)  
+                        local concatenated_str =  hex_str_22 .. hex_str_21 .. hex_str_20 .. hex_str_19
+                        log.info(taskname, "concate str:", concatenated_str )
+                        local decimal_value = tonumber(concatenated_str, 10)
+                        log.info(taskname, "t-pow decimal_value :", decimal_value )
+                        tnpow = (decimal_value) * 0.01
+                    end 
                     if i == 11 or i == 12 then
                         local data_len = string.format("%02X", rd[fecount + 10])
                         log.info(taskname, "data_len:", data_len)
@@ -484,9 +489,10 @@ function
         d.datas.curr = curr
         d.datas.volt = volt 
         d.datas.pow = pow
+        
         d.datas.tpow = tpow
         d.datas.tppow = tppow
-        d.data.tnpow = tnpow
+        d.datas.tnpow = tnpow
         
         local restr = json.encode(d)                            
         log.info(taskname, restr)
