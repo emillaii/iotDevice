@@ -23,7 +23,7 @@ function
         {0x68, 0x61, 0x57, 0x85, 0x09, 0x03, 0x24, 0x68, 0x11, 0x04, 0x33, 0x33, 0x35, 0x34, 0x22, 0x16}, -- t-pow + time 12
         {0x68, 0x61, 0x57, 0x85, 0x09, 0x03, 0x24, 0x68, 0x11, 0x04, 0x33, 0x35, 0x34, 0x35, 0x22, 0x16}, -- volt B 13
         {0x68, 0x61, 0x57, 0x85, 0x09, 0x03, 0x24, 0x68, 0x11, 0x04, 0x33, 0x36, 0x34, 0x35, 0x22, 0x16}, -- volt C 14
-        {0x68, 0x61, 0x57, 0x85, 0x09, 0x03, 0x24, 0x68, 0x11, 0x04, 0x33, 0x35, 0x35, 0x35, 0x22, 0x16}, -- curr B 15
+        {0x68, 0x61, 0x57, 0x85, 0x09, 0x03, 0x24, 0x68, 0x11, 0x04, 0x33, 0x35, 0x35, 0x35, 0x22, 0x16}, -- curr B 15 (Not support)
         {0x68, 0x61, 0x57, 0x85, 0x09, 0x03, 0x24, 0x68, 0x11, 0x04, 0x33, 0x36, 0x35, 0x35, 0x22, 0x16}, -- curr C 16
         {0x68, 0x61, 0x57, 0x85, 0x09, 0x03, 0x24, 0x68, 0x11, 0x04, 0x33, 0x34, 0x36, 0x35, 0x24, 0x16}, -- pow A 17
         {0x68, 0x61, 0x57, 0x85, 0x09, 0x03, 0x24, 0x68, 0x11, 0x04, 0x33, 0x35, 0x36, 0x35, 0x24, 0x16}, -- pow B 18
@@ -32,16 +32,9 @@ function
         {0x68, 0x61, 0x57, 0x85, 0x09, 0x03, 0x24, 0x68, 0x11, 0x04, 0x33, 0x34, 0x38, 0x35, 0x24, 0x16}, -- A视在功率 21
         {0x68, 0x61, 0x57, 0x85, 0x09, 0x03, 0x24, 0x68, 0x11, 0x04, 0x33, 0x35, 0x38, 0x35, 0x24, 0x16}, -- B视在功率 22
         {0x68, 0x61, 0x57, 0x85, 0x09, 0x03, 0x24, 0x68, 0x11, 0x04, 0x33, 0x36, 0x38, 0x35, 0x24, 0x16}, -- C视在功率 23
-        {0x68, 0x61, 0x57, 0x85, 0x09, 0x03, 0x24, 0x68, 0x11, 0x04, 0x33, 0x33, 0x34, 0x33, 0x24, 0x16}, -- 当前正向有功电能数据块(总、尖、峰、平、谷) 24
-        {0x68, 0x61, 0x57, 0x85, 0x09, 0x03, 0x24, 0x68, 0x11, 0x04, 0x33, 0x34, 0x34, 0x33, 0x24, 0x16}, -- 25
-        {0x68, 0x61, 0x57, 0x85, 0x09, 0x03, 0x24, 0x68, 0x11, 0x04, 0x33, 0x35, 0x34, 0x33, 0x24, 0x16}, -- 26
-        {0x68, 0x61, 0x57, 0x85, 0x09, 0x03, 0x24, 0x68, 0x11, 0x04, 0x33, 0x36, 0x34, 0x33, 0x24, 0x16}, -- 27
-        {0x68, 0x61, 0x57, 0x85, 0x09, 0x03, 0x24, 0x68, 0x11, 0x04, 0x33, 0x37, 0x34, 0x33, 0x24, 0x16}, -- 28
-        {0x68, 0x61, 0x57, 0x85, 0x09, 0x03, 0x24, 0x68, 0x11, 0x04, 0x33, 0x33, 0x35, 0x33, 0x24, 0x16}, -- 当前反向有功电能数据块(总、尖、峰、平、谷) 29
-        {0x68, 0x61, 0x57, 0x85, 0x09, 0x03, 0x24, 0x68, 0x11, 0x04, 0x33, 0x34, 0x35, 0x33, 0x24, 0x16}, -- 30
-        {0x68, 0x61, 0x57, 0x85, 0x09, 0x03, 0x24, 0x68, 0x11, 0x04, 0x33, 0x35, 0x35, 0x33, 0x24, 0x16}, -- 31
-        {0x68, 0x61, 0x57, 0x85, 0x09, 0x03, 0x24, 0x68, 0x11, 0x04, 0x33, 0x36, 0x35, 0x33, 0x24, 0x16}, -- 32
-        {0x68, 0x61, 0x57, 0x85, 0x09, 0x03, 0x24, 0x68, 0x11, 0x04, 0x33, 0x37, 0x35, 0x33, 0x24, 0x16}  -- 33
+        {0x68, 0x61, 0x57, 0x85, 0x09, 0x03, 0x24, 0x68, 0x11, 0x04, 0x33, 0x32, 0x34, 0x33, 0x24, 0x16}, -- 当前正向有功电能数据块(总、尖、峰、平、谷) 24
+        {0x68, 0x61, 0x57, 0x85, 0x09, 0x03, 0x24, 0x68, 0x11, 0x04, 0x33, 0x32, 0x35, 0x33, 0x24, 0x16}, -- 当前negative有功电能数据块(总、尖、峰、平、谷) 25
+
     }
     local ncmd = nil
     local crcr = nil
@@ -89,11 +82,15 @@ function
         local pp4 = 0
         local pp5 = 0 
 
+        local pp_str = ""
+
         local pn1 = 0 
         local pn2 = 0
         local pn3 = 0
         local pn4 = 0
         local pn5 = 0 
+        
+        local pn_str = ""
 
         local date = ""
         local time = ""
@@ -162,7 +159,7 @@ function
                         }
 
                         for j = 1, 6 do
-                            for k = 3, 14 do 
+                            for k = 3, 25 do  -- need to exact the same as the command length
                                 cmd[k][j+1] = address_bytes[j]
                             end
                         end
@@ -191,16 +188,7 @@ function
 
                         local checksum22 = 0
                         local checksum23 = 0
-                        local checksum24 = 0
-                        local checksum25 = 0
-                        local checksum26 = 0
 
-                        local checksum27 = 0
-                        local checksum28 = 0
-                        local checksum29 = 0
-                        local checksum30 = 0
-                        local checksum31 = 0
-                        
                         for j = 1, 14 do
                             checksum1 = checksum1 + cmd[3][j]
                             checksum2 = checksum2 + cmd[4][j]
@@ -226,15 +214,6 @@ function
 
                             checksum22 = checksum22 + cmd[24][j]
                             checksum23 = checksum23 + cmd[25][j]
-                            checksum24 = checksum24 + cmd[26][j]
-                            checksum25 = checksum25 + cmd[27][j]
-                            checksum26 = checksum26 + cmd[28][j]
-
-                            checksum27 = checksum27 + cmd[29][j]
-                            checksum28 = checksum28 + cmd[30][j]
-                            checksum29 = checksum29 + cmd[31][j]
-                            checksum30 = checksum30 + cmd[32][j]
-                            checksum31 = checksum31 + cmd[33][j]
                         end
                         cmd[3][15] = bit.band(checksum1, 0xFF)
                         cmd[4][15] = bit.band(checksum2, 0xFF)
@@ -260,15 +239,6 @@ function
 
                         cmd[24][15] = bit.band(checksum22, 0xFF)
                         cmd[25][15] = bit.band(checksum23, 0xFF)
-                        cmd[26][15] = bit.band(checksum24, 0xFF)
-                        cmd[27][15] = bit.band(checksum25, 0xFF)
-                        cmd[28][15] = bit.band(checksum26, 0xFF)
-
-                        cmd[29][15] = bit.band(checksum27, 0xFF)
-                        cmd[30][15] = bit.band(checksum28, 0xFF)
-                        cmd[31][15] = bit.band(checksum29, 0xFF)
-                        cmd[32][15] = bit.band(checksum30, 0xFF)
-                        cmd[33][15] = bit.band(checksum31, 0xFF)
 
                         local function printHexArray(array)
                             local hexArray = {}
@@ -302,15 +272,6 @@ function
 
                         log.info(taskname, "Updated cmd[24]: ", printHexArray(cmd[24]))
                         log.info(taskname, "Updated cmd[25]: ", printHexArray(cmd[25]))
-                        log.info(taskname, "Updated cmd[26]: ", printHexArray(cmd[26]))
-                        log.info(taskname, "Updated cmd[27]: ", printHexArray(cmd[27]))
-                        log.info(taskname, "Updated cmd[28]: ", printHexArray(cmd[28]))
-
-                        log.info(taskname, "Updated cmd[29]: ", printHexArray(cmd[29]))
-                        log.info(taskname, "Updated cmd[30]: ", printHexArray(cmd[30]))
-                        log.info(taskname, "Updated cmd[31]: ", printHexArray(cmd[31]))
-                        log.info(taskname, "Updated cmd[32]: ", printHexArray(cmd[32]))
-                        log.info(taskname, "Updated cmd[33]: ", printHexArray(cmd[33]))
                     end
                     if i == 6 then
                         local hex_str_19 = string.format("%02X", rd[fecount + 10 + 5] - 0x33)  
@@ -409,7 +370,7 @@ function
                             log.info(taskname, "volt C decimal_value :", decimal_value )
                             if decimal_value == nil then 
                             else 
-                                voltB = (decimal_value) * 0.1 
+                                voltC = (decimal_value) * 0.1 
                             end 
                         end
                     end
@@ -505,84 +466,88 @@ function
                             end 
                         end 
                     end
-                    if i == 24 or i == 25 or i == 26 or i == 27 or i == 28 or i == 29 or i == 30 or i == 31 or i == 32 or i == 33 then 
-                        local hex_str_19 = string.format("%02X", rd[fecount + 10 + 5] - 0x33)  
-                        local hex_str_20 = string.format("%02X", rd[fecount + 10 + 6] - 0x33) 
-                        local hex_str_21 = string.format("%02X", rd[fecount + 10 + 7] - 0x33)  
-                        local hex_str_22 = string.format("%02X", rd[fecount + 10 + 8] - 0x33)  
-                        local concatenated_str =  hex_str_22 .. hex_str_21 .. hex_str_20 .. hex_str_19
-                        log.info(taskname, "concate str:", concatenated_str )
-                        local decimal_value = tonumber(concatenated_str, 10)
-                        if i == 24 then 
-                            log.info(taskname, "t1+pow decimal_value :", decimal_value )
-                            if decimal_value == nil then 
-                            else
-                                pp1 = (decimal_value) * 0.01
-                            end 
+                    if i == 24 or i == 25 then 
+                        local data_len = string.format("%02X", rd[fecount + 10])
+                        if data_len == "01" then 
+                            log.info(taskname, "Not support")
+                        else
+                            local hex_str_15 = string.format("%02X", rd[fecount + 15] - 0x33)  
+                            local hex_str_16 = string.format("%02X", rd[fecount + 16] - 0x33) 
+                            local hex_str_17 = string.format("%02X", rd[fecount + 17] - 0x33)  
+                            local hex_str_18 = string.format("%02X", rd[fecount + 18] - 0x33)  
+
+                            local hex_str_19 = string.format("%02X", rd[fecount + 19] - 0x33)  
+                            local hex_str_20 = string.format("%02X", rd[fecount + 20] - 0x33) 
+                            local hex_str_21 = string.format("%02X", rd[fecount + 21] - 0x33)  
+                            local hex_str_22 = string.format("%02X", rd[fecount + 22] - 0x33)  
+
+                            local hex_str_23 = string.format("%02X", rd[fecount + 23] - 0x33)  
+                            local hex_str_24 = string.format("%02X", rd[fecount + 24] - 0x33) 
+                            local hex_str_25 = string.format("%02X", rd[fecount + 25] - 0x33)  
+                            local hex_str_26 = string.format("%02X", rd[fecount + 26] - 0x33)  
+
+                            local hex_str_27 = string.format("%02X", rd[fecount + 27] - 0x33)  
+                            local hex_str_28 = string.format("%02X", rd[fecount + 28] - 0x33) 
+                            local hex_str_29 = string.format("%02X", rd[fecount + 29] - 0x33)  
+                            local hex_str_30 = string.format("%02X", rd[fecount + 30] - 0x33)
+
+                            local hex_str_31 = string.format("%02X", rd[fecount + 31] - 0x33)  
+                            local hex_str_32 = string.format("%02X", rd[fecount + 32] - 0x33) 
+                            local hex_str_33 = string.format("%02X", rd[fecount + 33] - 0x33)  
+                            local hex_str_34 = string.format("%02X", rd[fecount + 34] - 0x33)  
+
+                            local concatenated_str_1 =  hex_str_18 .. hex_str_17 .. hex_str_16 .. hex_str_15
+                            local concatenated_str_2 =  hex_str_22 .. hex_str_21 .. hex_str_20 .. hex_str_19
+                            local concatenated_str_3 =  hex_str_26 .. hex_str_25 .. hex_str_24 .. hex_str_23
+                            local concatenated_str_4 =  hex_str_30 .. hex_str_29 .. hex_str_28 .. hex_str_27
+                            local concatenated_str_5 =  hex_str_34 .. hex_str_33 .. hex_str_32 .. hex_str_31
+
+                            log.info(taskname, "concate str 1:", concatenated_str_1 )
+                            log.info(taskname, "concate str 2:", concatenated_str_2 )
+                            log.info(taskname, "concate str 3:", concatenated_str_3 )
+                            log.info(taskname, "concate str 4:", concatenated_str_4 )
+                            log.info(taskname, "concate str 5:", concatenated_str_5 )
+
+                            local decimal_value_1 = tonumber(concatenated_str_1, 10)
+                            local decimal_value_2 = tonumber(concatenated_str_2, 10)
+                            local decimal_value_3 = tonumber(concatenated_str_3, 10)
+                            local decimal_value_4 = tonumber(concatenated_str_4, 10)
+                            local decimal_value_5 = tonumber(concatenated_str_5, 10)
+
+                            if i == 24 then 
+                                log.info(taskname, "t1+pow decimal_value :", decimal_value_1 )
+                                log.info(taskname, "t2+pow decimal_value :", decimal_value_2 )
+                                log.info(taskname, "t3+pow decimal_value :", decimal_value_3 )
+                                log.info(taskname, "t4+pow decimal_value :", decimal_value_4 )
+                                log.info(taskname, "t5+pow decimal_value :", decimal_value_5 )
+                                pp_str = rd
+                                if decimal_value == nil then 
+                                else
+                                    pp1 = (decimal_value_1) * 0.01
+                                    pp2 = (decimal_value_2) * 0.01
+                                    pp3 = (decimal_value_3) * 0.01
+                                    pp4 = (decimal_value_4) * 0.01
+                                    pp5 = (decimal_value_5) * 0.01
+                                end 
+                            end
+                            if i == 25 then 
+                                log.info(taskname, "t1-pow decimal_value :", decimal_value_1 )
+                                log.info(taskname, "t2-pow decimal_value :", decimal_value_2 )
+                                log.info(taskname, "t3-pow decimal_value :", decimal_value_3 )
+                                log.info(taskname, "t4-pow decimal_value :", decimal_value_4 )
+                                log.info(taskname, "t5-pow decimal_value :", decimal_value_5 )
+                                pn_str = rd
+                                if decimal_value == nil then 
+                                else
+                                    pn1 = (decimal_value_1) * 0.01
+                                    pn2 = (decimal_value_2) * 0.01
+                                    pn3 = (decimal_value_3) * 0.01
+                                    pn4 = (decimal_value_4) * 0.01
+                                    pn5 = (decimal_value_5) * 0.01
+                                end 
+                            end
                         end 
-                        if i == 25 then 
-                            log.info(taskname, "t2+pow decimal_value :", decimal_value )
-                            if decimal_value == nil then 
-                            else
-                                pp2 = (decimal_value) * 0.01
-                            end 
-                        end 
-                        if i == 26 then 
-                            log.info(taskname, "t3+pow decimal_value :", decimal_value )
-                            if decimal_value == nil then 
-                            else
-                                pp3 = (decimal_value) * 0.01
-                            end 
-                        end 
-                        if i == 27 then 
-                            log.info(taskname, "t4+pow decimal_value :", decimal_value )
-                            if decimal_value == nil then 
-                            else
-                                pp4 = (decimal_value) * 0.01
-                            end 
-                        end 
-                        if i == 28 then 
-                            log.info(taskname, "t5+pow decimal_value :", decimal_value )
-                            if decimal_value == nil then 
-                            else
-                                pp5 = (decimal_value) * 0.01
-                            end 
-                        end 
-                        if i == 29 then 
-                            log.info(taskname, "t1-pow decimal_value :", decimal_value )
-                            if decimal_value == nil then 
-                            else
-                                pn1 = (decimal_value) * 0.01
-                            end 
-                        end 
-                        if i == 30 then 
-                            log.info(taskname, "t2-pow decimal_value :", decimal_value )
-                            if decimal_value == nil then 
-                            else
-                                pn2 = (decimal_value) * 0.01
-                            end 
-                        end 
-                        if i == 31 then 
-                            log.info(taskname, "t3-pow decimal_value :", decimal_value )
-                            if decimal_value == nil then 
-                            else
-                                pn3 = (decimal_value) * 0.01
-                            end 
-                        end 
-                        if i == 32 then 
-                            log.info(taskname, "t4-pow decimal_value :", decimal_value )
-                            if decimal_value == nil then 
-                            else
-                                pn4 = (decimal_value) * 0.01
-                            end 
-                        end 
-                        if i == 33 then 
-                            log.info(taskname, "t5-pow decimal_value :", decimal_value )
-                            if decimal_value == nil then 
-                            else
-                                pn5 = (decimal_value) * 0.01
-                            end 
-                        end 
+                        
                     end 
                 end                     
             end 
@@ -631,6 +596,9 @@ function
         d.datas.pn3 = pn3 
         d.datas.pn4 = pn4 
         d.datas.pn5 = pn5 
+
+        d.datas.pp_str = pp_str
+        d.datas.pn_str = pn_str
 
 
         local restr = json.encode(d)                            
